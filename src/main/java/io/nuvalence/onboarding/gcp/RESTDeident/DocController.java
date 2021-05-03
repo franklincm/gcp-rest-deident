@@ -1,29 +1,38 @@
 package io.nuvalence.onboarding.gcp.RESTDeident;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Value;
+import io.nuvalence.onboarding.gcp.RESTDeident.payload.UploadFileResponse;
+import io.nuvalence.onboarding.gcp.RESTDeident.service.FileStorageService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 @RestController
 public class DocController {
-
-    private static final String template = "Hello, %s";
-    private final AtomicLong counter = new AtomicLong();
-	
+    
     private static final Logger log = LoggerFactory.getLogger(DocController.class);
 
-    @Value("${unclass-bucket-name}")
-    String unclassBucketName;
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    @PostMapping("/docs")
+    public UploadFileResponse uploadFile(@RequestParam("file") Optional<MultipartFile> file) {
+
+    	UploadFileResponse response = new UploadFileResponse("no file specified", null, -1);
 	
-    @GetMapping("/docs")
-    public String  bucketName() throws InterruptedException {
-	log.info("id:" + counter.incrementAndGet());
-	return unclassBucketName;
+    	file.ifPresent(fp -> {
+    		String fileName = fileStorageService.storeFile(fp);
+    		response.setFileName(fileName);
+    		response.setFileType(fp.getContentType());
+    		response.setSize(fp.getSize());
+	    });
+	
+	log.info("POST response: " + response);
+    	return response;
     }
 }
