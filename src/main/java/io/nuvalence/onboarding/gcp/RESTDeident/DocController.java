@@ -3,7 +3,8 @@ package io.nuvalence.onboarding.gcp.RESTDeident;
 import java.util.Optional;
 
 import io.nuvalence.onboarding.gcp.RESTDeident.payload.UploadFileResponse;
-import io.nuvalence.onboarding.gcp.RESTDeident.service.FileStorageService;
+//import io.nuvalence.onboarding.gcp.RESTDeident.service.FileStorageService;
+import io.nuvalence.onboarding.gcp.RESTDeident.service.CloudStorageService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ public class DocController {
     private static final Logger log = LoggerFactory.getLogger(DocController.class);
 
     @Autowired
-    private FileStorageService fileStorageService;
+    private CloudStorageService cloudStorageService;
 
     @PostMapping("/docs")
     public UploadFileResponse uploadFile(@RequestParam("file") Optional<MultipartFile> file) {
@@ -26,7 +27,7 @@ public class DocController {
     	UploadFileResponse response = new UploadFileResponse("no file specified", null, -1);
 	
     	file.ifPresent(fp -> {
-    		String fileName = fileStorageService.storeFile(fp);
+    		String fileName = cloudStorageService.storeFile(fp);
     		response.setFileName(fileName);
     		response.setFileType(fp.getContentType());
     		response.setSize(fp.getSize());
