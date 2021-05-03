@@ -9,17 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.stream.Collectors;
-
 
 @RestController
 public class DocController {
@@ -32,18 +23,15 @@ public class DocController {
     @PostMapping("/docs")
     public UploadFileResponse uploadFile(@RequestParam("file") Optional<MultipartFile> file) {
 
-	UploadFileResponse response = new UploadFileResponse("no file", "", -1);
+    	UploadFileResponse response = new UploadFileResponse("no file", "", -1);
 	
-	file.ifPresent(fp -> {
-		String fileName = fileStorageService.storeFile(fp);
-		response.setFileName(fileName);
-		response.setFileType(fp.getContentType());
-		response.setSize(fp.getSize());
-		//return new UploadFileResponse(fileName, fp.getContentType(), fp.getSize());
-	    });
-	//String fileName = fileStorageService.storeFile(file);
+    	file.ifPresent(fp -> {
+    		String fileName = fileStorageService.storeFile(fp);
+    		response.setFileName(fileName);
+    		response.setFileType(fp.getContentType());
+    		response.setSize(fp.getSize());
+	    	});
 	
-	//return new UploadFileResponse(fileName, file.getContentType(), file.getSize());
-	return response;
+    	return response;
     }
 }
