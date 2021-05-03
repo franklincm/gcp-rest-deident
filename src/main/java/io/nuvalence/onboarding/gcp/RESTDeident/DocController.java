@@ -23,15 +23,16 @@ public class DocController {
     @PostMapping("/docs")
     public UploadFileResponse uploadFile(@RequestParam("file") Optional<MultipartFile> file) {
 
-    	UploadFileResponse response = new UploadFileResponse("no file", "", -1);
+    	UploadFileResponse response = new UploadFileResponse("no file specified", null, -1);
 	
     	file.ifPresent(fp -> {
     		String fileName = fileStorageService.storeFile(fp);
     		response.setFileName(fileName);
     		response.setFileType(fp.getContentType());
     		response.setSize(fp.getSize());
-	    	});
+	    });
 	
+	log.info("POST response: " + response);
     	return response;
     }
 }

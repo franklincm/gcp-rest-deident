@@ -34,4 +34,9 @@ public class UploadFileResponse {
     public void setSize(long size) {
 	this.size = size;
     }
+
+    @Override
+    public String toString() {
+	return String.format("name: '%1$s', type: %2$s, size: %3$s", this.fileName, this.fileType, this.size);
+    }
 }
