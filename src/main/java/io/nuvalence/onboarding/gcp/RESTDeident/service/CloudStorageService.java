@@ -25,6 +25,7 @@ public class CloudStorageService {
     public String storeFile(MultipartFile file) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	fileName = fileName.replaceAll("\\s+", "_").toLowerCase();
 
 	if(fileName.contains("..")) {
 	    throw new CloudStorageException("Sorry! Filename contains invalid path sequence " + fileName);
