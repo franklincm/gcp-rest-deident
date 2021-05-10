@@ -1,34 +1,36 @@
 package io.nuvalence.onboarding.gcp.RESTDeident.payload;
 
+import io.nuvalence.onboarding.gcp.RESTDeident.model.Document;
 import com.google.cloud.storage.Blob;
 import com.google.api.gax.paging.Page;
+import java.util.Date;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class GetFileResponse {
 
-    private Page<Blob> blobs;
+    private ArrayList<Document> documents;
     
     public GetFileResponse(Page<Blob> blobs) {
-	this.blobs = blobs;
-
-	for (Blob blob : blobs.iterateAll()) {
-	    System.out.println("blob: " + blob.getName());
+	documents = new ArrayList<Document>();
+	
+	for (Blob blob: blobs.getValues()) {
+	    documents.add(new Document(
+				       blob.getName(),
+				       blob.getContentType(),
+				       blob.getSize(),
+				       blob.getCreateTime()
+				       )
+			  );
 	}
     }
 
-    public Page<Blob> getBlobs() {
-	return this.blobs;
+    public ArrayList<Document> getDocuments() {
+	return this.documents;
     }
+    
+    // TODO: @Override
+    // public String toString()
 
-    public void setBlobs(Page<Blob> blobs) {
-	this.blobs = blobs;
-    }
-
-    @Override
-    public String toString() {
-	String str = "";
-	for (Blob blob : blobs.iterateAll()) {
-	    str += blob.getName() + "\n";
-	}
-	return str;
-    }
 }
