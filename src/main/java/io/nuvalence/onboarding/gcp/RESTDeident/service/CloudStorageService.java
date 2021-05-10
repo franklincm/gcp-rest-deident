@@ -50,8 +50,6 @@ public class CloudStorageService {
     }
 
     public Page<Blob> getFiles() {
-	System.out.println("CloudStorageService.bucketName: " + bucketName);
-	System.out.println("CloudStorageService.sensitiveBucketName: " + sensitiveBucketName);
 	Page<Blob> blobs = storage.list(sensitiveBucketName);
 	return blobs;
     }
