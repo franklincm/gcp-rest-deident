@@ -11,13 +11,20 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.BlobInfo;
-
+import com.google.cloud.storage.Blob;
+import com.google.api.gax.paging.Page;
 
 @Service
 public class CloudStorageService {
 
     @Value("${unclass-bucket-name}")
     private String bucketName;
+
+    @Value("${sensitive-bucket-name}")
+    private String sensitiveBucketName;
+
+    @Value("${safe-bucket-name}")
+    private String safeBucketName;
 
     @Autowired
     private Storage storage;
@@ -40,5 +47,12 @@ public class CloudStorageService {
 	} catch (StorageException | IOException e) {
 	    return "Error";
 	}
+    }
+
+    public Page<Blob> getFiles() {
+	System.out.println("CloudStorageService.bucketName: " + bucketName);
+	System.out.println("CloudStorageService.sensitiveBucketName: " + sensitiveBucketName);
+	Page<Blob> blobs = storage.list(sensitiveBucketName);
+	return blobs;
     }
 }
